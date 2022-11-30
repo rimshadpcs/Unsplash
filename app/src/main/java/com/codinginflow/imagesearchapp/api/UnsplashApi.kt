@@ -22,4 +22,7 @@ interface UnsplashApi {
     ): UnsplashResponse
     //:UnsplashResponse is what we get from this request which is one object of photo
 
+
+
+
 }
