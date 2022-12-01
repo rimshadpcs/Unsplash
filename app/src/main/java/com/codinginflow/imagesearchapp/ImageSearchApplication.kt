@@ -7,4 +7,4 @@ import dagger.hilt.android.HiltAndroidApp
 class ImageSearchApplication : Application(){
 
 
-}
+} 
