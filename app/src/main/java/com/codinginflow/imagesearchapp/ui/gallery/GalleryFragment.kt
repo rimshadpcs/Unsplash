@@ -13,16 +13,24 @@ import dagger.hilt.android.AndroidEntryPoint
 class GalleryFragment : Fragment(R.layout.fragment_gallery){
 
     private val viewModel by viewModels<GalleryViewModel>()
-    private var _binding: FragmentGalleryBinding?=null
+
+    private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGalleryBinding.bind(view)
 
         val adapter = UnsplashPhotoAdapter()
+
         binding.apply {
             recyclerView.setHasFixedSize(true)
-            recyclerView.adapter = adapter
+            recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = UnsplashPhotoLoadStateAdapter{adapter.retry()},
+                footer = UnsplashPhotoLoadStateAdapter{adapter.retry()},
+            )
+
+
         }
 
         viewModel.photos.observe(viewLifecycleOwner){
