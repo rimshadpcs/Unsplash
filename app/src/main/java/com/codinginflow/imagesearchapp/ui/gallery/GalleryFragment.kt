@@ -5,12 +5,15 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.paging.LoadState
 import com.codinginflow.imagesearchapp.R
 import com.codinginflow.imagesearchapp.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.unsplash_photo_load_state_footer.*
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment(R.layout.fragment_gallery){
@@ -28,10 +31,14 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery){
 
         binding.apply {
             recyclerView.setHasFixedSize(true)
+            recyclerView.itemAnimator = null
             recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = UnsplashPhotoLoadStateAdapter{adapter.retry()},
                 footer = UnsplashPhotoLoadStateAdapter{adapter.retry()},
             )
+            btRetry.setOnClickListener {
+                adapter.retry()
+            }
 
 
         }
@@ -40,6 +47,23 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery){
             adapter.submitData(viewLifecycleOwner.lifecycle,it)
         }
         setHasOptionsMenu(true)
+
+        adapter.addLoadStateListener {
+            binding.apply {
+                progressBar.isVisible = it.source.refresh is LoadState.Loading
+                recyclerView.isVisible = it.source.refresh is LoadState.NotLoading
+                btRetry.isVisible = it.source.refresh is LoadState.Error
+                tvCannotLoad.isVisible = it.source.refresh is LoadState.Error
+                if(it.source.refresh is LoadState.NotLoading && it.append.endOfPaginationReached && adapter.itemCount<1){
+                    recyclerView.isVisible = false
+                    tvNoResult.isVisible = true
+                }else{
+                    tvNoResult.isVisible = false
+
+                }
+
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
