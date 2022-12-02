@@ -4,4 +4,5 @@
     <string name="cannot_be_loaded">cannot be loaded</string>
     <string name="no_results_found">no results found</string>
     <string name="results_cannot_be_loaded">results cannot be loaded</string>
+    <string name="search">search</string>
 </resources>
