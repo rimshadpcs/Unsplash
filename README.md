@@ -2,6 +2,7 @@
 
 ## Tech stack
 1. Retrofit
-2. Dagger Hilt
-3. Navigation controller
-4. Load State Listener
+2. Paging3
+3. Dagger Hilt
+4. Navigation controller
+5. Load State Listener
